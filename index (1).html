@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rackline — Infrastructure Notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #10141c;
+    --navy-raised: #161b26;
+    --paper: #e9ecef;
+    --paper-dim: rgba(233,236,239,0.62);
+    --amber: #d9a441;
+    --teal: #3e7c77;
+    --line: rgba(233,236,239,0.12);
+    --max-w: 880px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--navy);
+    color: var(--paper);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: inherit; text-decoration: none; }
+
+  .wrap { max-width: var(--max-w); margin: 0 auto; padding: 0 28px; }
+
+  /* ---------- Header ---------- */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: rgba(16, 20, 28, 0.92);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 0;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 1.05rem;
+  }
+
+  .brand-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--amber);
+    box-shadow: 0 0 0 3px rgba(217,164,65,0.18);
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 26px;
+  }
+
+  .gh-link {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--paper-dim);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.2s ease;
+  }
+  .gh-link:hover { color: var(--amber); }
+
+  .main-nav {
+    display: flex;
+    gap: 24px;
+    list-style: none;
+    font-size: 0.9rem;
+  }
+  .main-nav a { opacity: 0.8; transition: opacity 0.2s ease; }
+  .main-nav a:hover { opacity: 1; color: var(--amber); }
+  .main-nav a:focus-visible, .gh-link:focus-visible {
+    outline: 2px solid var(--amber);
+    outline-offset: 3px;
+  }
+
+  @media (max-width: 560px) {
+    .main-nav { display: none; }
+  }
+
+  /* ---------- Hero / featured post ---------- */
+  .hero {
+    padding: 64px 0 48px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .kicker {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 16px;
+  }
+
+  h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: clamp(1.9rem, 4.4vw, 2.7rem);
+    line-height: 1.15;
+    max-width: 18ch;
+  }
+
+  .hero-meta {
+    margin-top: 16px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--paper-dim);
+  }
+
+  .hero-excerpt {
+    margin-top: 20px;
+    max-width: 60ch;
+    color: var(--paper-dim);
+    font-size: 1.02rem;
+  }
+
+  .hero-link {
+    display: inline-block;
+    margin-top: 22px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.82rem;
+    color: var(--amber);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s ease;
+  }
+  .hero-link:hover { border-color: var(--amber); }
+
+  /* ---------- Tags ---------- */
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--teal);
+    border: 1px solid rgba(62,124,119,0.4);
+    padding: 3px 9px;
+    border-radius: 3px;
+  }
+
+  /* ---------- Post list ---------- */
+  .post-list { padding: 8px 0 24px; }
+
+  .post {
+    padding: 36px 0;
+    border-bottom: 1px solid var(--line);
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    gap: 20px;
+  }
+
+  .post-index {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.78rem;
+    color: rgba(233,236,239,0.35);
+    padding-top: 4px;
+  }
+
+  .post h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 1.32rem;
+    line-height: 1.3;
+    transition: color 0.2s ease;
+  }
+
+  .post:hover h2 { color: var(--amber); }
+
+  .post-meta {
+    margin-top: 8px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.76rem;
+    color: var(--paper-dim);
+  }
+
+  .post .tags { margin-top: 10px; }
+
+  .post-excerpt {
+    margin-top: 14px;
+    color: var(--paper-dim);
+    font-size: 0.96rem;
+    max-width: 60ch;
+  }
+
+  .read-more {
+    display: inline-block;
+    margin-top: 12px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.76rem;
+    color: var(--amber);
+  }
+
+  @media (max-width: 560px) {
+    .post { grid-template-columns: 1fr; }
+    .post-index { display: none; }
+  }
+
+  /* ---------- Pagination ---------- */
+  .pagination {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 32px 0 72px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.85rem;
+  }
+
+  .pagination a, .pagination span {
+    padding: 8px 12px;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    color: var(--paper-dim);
+  }
+
+  .pagination .current {
+    color: var(--navy);
+    background: var(--amber);
+    border-color: var(--amber);
+  }
+
+  .pagination a:hover { border-color: var(--amber); color: var(--amber); }
+
+  /* ---------- Badge grid ---------- */
+  .badges-section {
+    padding: 48px 0 64px;
+    border-top: 1px solid var(--line);
+  }
+
+  .badges-heading {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--paper-dim);
+    margin-bottom: 24px;
+  }
+
+  .badge-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 14px;
+  }
+
+  .badge {
+    aspect-ratio: 1;
+    background: var(--navy-raised);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.68rem;
+    color: rgba(233,236,239,0.3);
+    text-align: center;
+    padding: 6px;
+  }
+
+  /* ---------- Footer ---------- */
+  footer {
+    border-top: 1px solid var(--line);
+    padding: 28px 0 40px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    color: rgba(233,236,239,0.4);
+  }
+
+  footer a { color: var(--amber); }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap header-row">
+    <a class="brand" href="#"><span class="brand-dot"></span>Rackline</a>
+    <div class="header-right">
+      <a class="gh-link" href="#">↗ GitHub</a>
+      <ul class="main-nav">
+        <li><a href="#">Home</a></li>
+        <li><a href="#">About</a></li>
+      </ul>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="hero wrap">
+    <p class="kicker">Featured</p>
+    <h1><a href="#">Cutting a four-day migration down to forty minutes with a queue</a></h1>
+    <div class="tags">
+      <span class="tag">Automation</span>
+      <span class="tag">Infra</span>
+      <span class="tag">Notes</span>
+    </div>
+    <p class="hero-meta" style="margin-top: 14px;">By demo-author · 07/07/2026</p>
+    <p class="hero-excerpt">Every large migration starts the same way: a spreadsheet, a maintenance window, and a plan that survives contact with exactly nothing. Here's the queueing approach that finally made ours boring — in the good way — and the three failure modes it closed off before they happened…</p>
+    <a class="hero-link" href="#">Read the full post →</a>
+  </section>
+
+  <section class="post-list wrap">
+
+    <article class="post">
+      <div class="post-index">01</div>
+      <div>
+        <h2><a href="#">Rebuilding a host inventory from three years of drift</a></h2>
+        <div class="tags"><span class="tag">Inventory</span><span class="tag">Scripts</span></div>
+        <p class="post-meta">demo-author · 28/06/2026</p>
+        <p class="post-excerpt">Nobody decided to let the inventory drift. It happened one exception at a time, across a dozen small changes that each seemed reasonable on their own. Reconstructing ground truth meant reconciling four sources that all disagreed with each other…</p>
+        <a class="read-more" href="#">Read more →</a>
+      </div>
+    </article>
+
+    <article class="post">
+      <div class="post-index">02</div>
+      <div>
+        <h2><a href="#">A checklist for the upgrade window nobody wants to own</a></h2>
+        <div class="tags"><span class="tag">Runbooks</span><span class="tag">Ops</span></div>
+        <p class="post-meta">demo-author · 19/06/2026</p>
+        <p class="post-excerpt">The riskiest upgrades aren't the complex ones — they're the routine ones nobody has written down, because everyone assumes someone else remembers the order the steps go in. This is the checklist we finally put on paper…</p>
+        <a class="read-more" href="#">Read more →</a>
+      </div>
+    </article>
+
+    <article class="post">
+      <div class="post-index">03</div>
+      <div>
+        <h2><a href="#">Why our rollback plan was the thing that actually got tested</a></h2>
+        <div class="tags"><span class="tag">Reliability</span></div>
+        <p class="post-meta">demo-author · 02/06/2026</p>
+        <p class="post-excerpt">Everyone rehearses the happy path. Almost nobody rehearses undoing it. After one deploy went sideways at 2am, we started treating the rollback script as the primary deliverable, not the afterthought…</p>
+        <a class="read-more" href="#">Read more →</a>
+      </div>
+    </article>
+
+    <article class="post">
+      <div class="post-index">04</div>
+      <div>
+        <h2><a href="#">Notes from a week spent purely on certificate hygiene</a></h2>
+        <div class="tags"><span class="tag">Security</span><span class="tag">PKI</span></div>
+        <p class="post-meta">demo-author · 21/05/2026</p>
+        <p class="post-excerpt">Certificates are the kind of debt that's invisible until the exact week it isn't. A short account of the audit, what we found expiring quietly in production, and the tooling we now run monthly so it never sneaks up again…</p>
+        <a class="read-more" href="#">Read more →</a>
+      </div>
+    </article>
+
+  </section>
+
+  <nav class="pagination wrap" aria-label="Post pagination">
+    <span class="current">1</span>
+    <a href="#">2</a>
+    <a href="#">3</a>
+    <span>…</span>
+    <a href="#">5</a>
+    <a href="#">Next →</a>
+  </nav>
+
+  <section class="badges-section wrap">
+    <p class="badges-heading">Certifications &amp; credentials</p>
+    <div class="badge-grid">
+      <div class="badge">CERT<br>01</div>
+      <div class="badge">CERT<br>02</div>
+      <div class="badge">CERT<br>03</div>
+      <div class="badge">CERT<br>04</div>
+      <div class="badge">CERT<br>05</div>
+      <div class="badge">CERT<br>06</div>
+      <div class="badge">CERT<br>07</div>
+      <div class="badge">CERT<br>08</div>
+    </div>
+  </section>
+</main>
+
+<footer class="wrap">
+  <span>© 2026 Rackline — demo layout</span>
+  <span>Structure inspired by a WordPress blog theme</span>
+</footer>
+
+</body>
+</html>
